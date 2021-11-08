@@ -12,6 +12,7 @@ namespace Contozoo.Resources.Animals
 {
 	[ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class AnimalsController : ControllerBase
 	{
         private readonly IMapper _mapper;
@@ -25,7 +26,14 @@ namespace Contozoo.Resources.Animals
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        /// <summary>
+        /// Get animals
+        /// </summary>
+        /// <param name="page">Page number</param>
+        /// <param name="limit">Limit items per page</param>
+        /// <returns>Animals</returns>
         [HttpGet(Name = "GetAnimals")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PagedResponse<AnimalDTO>>> GetAnimals(int page, int limit)
         {
             var animals = await _context.Animals
@@ -35,7 +43,14 @@ namespace Contozoo.Resources.Animals
             return Ok(GeneratePageLinks(limit, page, animals));
         }
 
+        /// <summary>
+        /// Get animal by CAI
+        /// </summary>
+        /// <param name="cai">Contozoo Animal Identification</param>
+        /// <returns>Animal</returns>        
         [HttpGet("{cai}", Name = "GetAnimalByCAI")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AnimalDTO>> GetAnimalByCAI(long cai)
         {
             var animal = await _context.Animals
@@ -49,7 +64,15 @@ namespace Contozoo.Resources.Animals
             return Ok(animal);
         }
 
+        /// <summary>
+        /// Update animal
+        /// </summary>
+        /// <param name="cai">Contozoo Animal Identification</param>
+        /// <param name="animalDTO">Animal information</param>
+        /// <returns></returns>
         [HttpPut("{cai}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTodoItem(long cai, AnimalDTO animalDTO)
         {
             if (cai != animalDTO.CAI)
@@ -68,7 +91,13 @@ namespace Contozoo.Resources.Animals
             return NoContent();
         }
 
+        /// <summary>
+        /// Create an animal
+        /// </summary>
+        /// <param name="animalDTO">Animal information</param>
+        /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<AnimalDTO>> CreateAnimal(AnimalDTO animalDTO)
         {
             var cai = animalDTO.CAI;
@@ -88,7 +117,14 @@ namespace Contozoo.Resources.Animals
                 animalDTO);
         }
 
+        /// <summary>
+        /// Delete an animal
+        /// </summary>
+        /// <param name="cai">Contozoo Animal Identification</param>
+        /// <returns></returns>
         [HttpDelete("{cai}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAnimal(long cai)
         {
             var animal = await _context.Animals
@@ -104,7 +140,15 @@ namespace Contozoo.Resources.Animals
             return NoContent();
         }
 
+        /// <summary>
+        /// Update animal name
+        /// </summary>
+        /// <param name="cai">Contozoo Animal Information</param>
+        /// <param name="name">Animal name</param>
+        /// <returns></returns>
         [HttpPatch("{cai}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateName(long cai, string name)
 		{
             var animal = await _context.Animals

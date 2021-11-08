@@ -20,7 +20,7 @@ namespace Contozoo.Resources.Animals
 				.WithMessage("CAI can not be 0");
 			RuleFor(x => x.Name)
 				.NotEmpty()
-				.WithMessage("CAI can not be empty");
+				.WithMessage("Name can not be empty");
 			RuleFor(x => x.ActiveHour)
 				.InclusiveBetween(0, 23)
 				.WithMessage("Active hour must be betwwen 0 and 23");

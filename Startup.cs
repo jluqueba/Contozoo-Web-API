@@ -12,7 +12,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -45,6 +47,10 @@ namespace Contozoo
 					Title = "Contozoo API",
 					Description = "An ASP.NET Core Web API for managing Animals"		
 				});
+
+				// using System.Reflection;
+				var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 			});
 			services.AddMvcCore()
 				.AddJsonOptions(ops =>
